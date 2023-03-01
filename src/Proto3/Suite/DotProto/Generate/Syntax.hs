@@ -105,7 +105,7 @@ defaultSrcLoc = SrcLoc "<generated>" 0 0
 -- * Common Haskell expressions, constructors, and operators
 --
 
-dotProtoFieldC, primC, repeatedC, nestedRepeatedC, namedC, mapC,
+dotProtoFieldC, primC, optionalC, repeatedC, nestedRepeatedC, namedC, mapC,
   fieldNumberC, singleC, dotsC, pathC, qualifiedC, anonymousC, dotProtoOptionC,
   identifierC, stringLitC, intLitC, floatLitC, boolLitC, trueC, falseC,
   nothingC, justC, forceEmitC, mconcatE, encodeMessageFieldE,
