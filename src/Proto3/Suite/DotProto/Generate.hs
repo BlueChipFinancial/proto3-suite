@@ -510,6 +510,7 @@ foldDPT dptToHsCont foldPrim ctxt dpt =
   in
     case dpt of
       Prim pType           -> cont <$> prim pType
+      Optional pType       -> cont <$> prim pType
       Repeated pType       -> cont <$> prim pType
       NestedRepeated pType -> cont <$> prim pType
       Map k v  | validMapKey k -> HsTyApp . cont <$> prim k <*> go (Prim v) -- need to 'Nest' message types
@@ -535,6 +536,7 @@ dptToHsContType :: TypeContext -> DotProtoType -> HsType -> HsType
 dptToHsContType ctxt = \case
   Prim (Named tyName) | isMessage ctxt tyName
                      -> HsTyApp $ primType_ "Maybe"
+  Optional _         -> HsTyApp $ primType_ "Maybe"
   Repeated _         -> HsTyApp $ primType_ "Vector"
   NestedRepeated _   -> HsTyApp $ primType_ "Vector"
   Map _ _            -> HsTyApp $ primType_ "Map"
@@ -1626,7 +1628,7 @@ dotProtoServiceD pkgIdent ctxt serviceIdent service = do
 -- * Common Haskell expressions, constructors, and operators
 --
 
-dotProtoFieldC, primC, repeatedC, nestedRepeatedC, namedC, mapC,
+dotProtoFieldC, primC, optionalC, repeatedC, nestedRepeatedC, namedC, mapC,
   fieldNumberC, singleC, dotsC, pathC, nestedC, anonymousC, dotProtoOptionC,
   identifierC, stringLitC, intLitC, floatLitC, boolLitC, trueC, falseC,
   unaryHandlerC, clientStreamHandlerC, serverStreamHandlerC, biDiStreamHandlerC,
@@ -1638,6 +1640,7 @@ dotProtoFieldC, primC, repeatedC, nestedRepeatedC, namedC, mapC,
 
 dotProtoFieldC       = HsVar (protobufName "DotProtoField")
 primC                = HsVar (protobufName "Prim")
+optionalC            = HsVar (protobufName "Optional")
 repeatedC            = HsVar (protobufName "Repeated")
 nestedRepeatedC      = HsVar (protobufName "NestedRepeated")
 namedC               = HsVar (protobufName "Named")
@@ -1762,6 +1765,7 @@ optionE (DotProtoOption name value) =
 -- | Translate a dot proto type to its Haskell AST type
 dpTypeE :: DotProtoType -> HsExp
 dpTypeE (Prim p)           = apply primC           [ dpPrimTypeE p ]
+dpTypeE (Optional p)       = apply optionalC       [ dpPrimTypeE p ]
 dpTypeE (Repeated p)       = apply repeatedC       [ dpPrimTypeE p ]
 dpTypeE (NestedRepeated p) = apply nestedRepeatedC [ dpPrimTypeE p ]
 dpTypeE (Map k v)          = apply mapC            [ dpPrimTypeE k, dpPrimTypeE v]
