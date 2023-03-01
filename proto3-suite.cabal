@@ -43,8 +43,8 @@ flag large-records
   Default:       True
   Manual:        True
 
-common common 
-  default-extensions: 
+common common
+  default-extensions:
     DeriveDataTypeable DeriveGeneric
 
 library
@@ -187,7 +187,7 @@ test-suite tests
     Test.Proto.Parse.Option
 
   build-depends:
-      aeson >= 1.1.1.0 && < 2.1
+      aeson >= 1.1.1.0 && < 2.2
     , attoparsec >= 0.13.0.1
     , base >=4.8 && <5.0
     , base64-bytestring >= 1.0.0.1 && < 1.3
